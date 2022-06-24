@@ -1,27 +1,41 @@
-const express = require('express');
 require('./src/db/mongoose')
+const express = require('express');
+const morgan = require("morgan");
+const helmet = require("helmet");
+const compression = require('compression')
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const Sentry = require("@sentry/node");
 const swaggerUi = require("swagger-ui-express");
 const v1Router = require('./src/routes/v1')
 const swaggerDocumentation = require("./src/swagger.json");
+const config = require('./src/config');
 
 class AppServer {
     constructor() {
         this.SERVER_STARTED = 'Example server started on port: '
         this.app = express();
-        /**
-         * @todo init sentry here later
-         */
+
+        if(process.env.NODE_ENV === "production") {
+            Sentry.init({dsn: config.app.sentryUrl});
+        }
+
         this.config()
     }
 
     config() {
+        this.app.use(compression())
+        this.app.use(helmet());
+        this.app.use(morgan("dev"));
         this.app.use(cors());
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: false }));
         this.app.use("/api/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocumentation))
         this.app.use('/api/v1', v1Router)
+
+        if(process.env.NODE_ENV === "production") {
+            this.app.use(Sentry.Handlers.errorHandler());
+        }
     }
 
     start(port) {

@@ -19,8 +19,6 @@ const config = require('../config');
 
         console.log("database connected...");
 
-        console.log(process.env.NODE_ENV);
-
         // seed data
         if(process.env.NODE_ENV !== 'production'){
             await Comment.deleteMany();
