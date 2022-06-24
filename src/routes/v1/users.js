@@ -21,4 +21,8 @@ router.delete('/:id', (req, res) => {
   UsersController.delete(req, res)
 })
 
+router.get('/:id/comments', (req, res) => {
+  UsersController.comments(req, res)
+})
+
 module.exports = router

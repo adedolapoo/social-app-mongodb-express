@@ -3,9 +3,26 @@ const commentServices = require('../services/comments.service')
 class CommentsController {
     static commentsService = new commentServices();
 
+    static async findAll(req, res) {
+        try {
+            const comments = await this.commentsService.findAll(req)
+            res.status(200).json({
+                success: true,
+                comments,
+                message: 'Comments retrieved'
+            })
+        } catch (error) {
+            res.status(400).json({
+                success: false,
+                error,
+                message: error.message
+            })
+        }
+    }
+
     static async create(req, res) {
         try {
-            const comment = await this.commentsService.createNewComment(req)
+            const comment = await this.commentsService.create(req)
             res.status(200).json({
                 success: true,
                 comment,
@@ -56,12 +73,12 @@ class CommentsController {
 
     static async stats(req, res) {
         try {
-            const {comments, mentions} = await this.commentsService.stats(req)
+            const {hashtags, mentions} = await this.commentsService.stats(req)
             res.status(200).json({
                 success: true,
-                comments,
+                hashtags,
                 mentions,
-                message: 'stats'
+                message: 'Top 10 hashtags and mentions retrieved'
             })
         } catch (error) {
             res.status(400).json({

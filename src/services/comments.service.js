@@ -3,7 +3,7 @@ const Comment = require('../models/comment.model');
 class CommentsService {
 
     async findAll(req) {
-        const comments = await User.find();
+        const comments = await Comment.find();
         if (!comments) {
             throw new Error("No Records found")
         }
@@ -64,8 +64,7 @@ class CommentsService {
         }
     }
 
-    async findForUser(req) {
-        const userId = req.params.userId;
+    async findForUser(userId) {
         const comments = await Comment.find({ userId }).populate({
             path:'userId',
             match: {

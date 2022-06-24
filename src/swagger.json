@@ -9,7 +9,27 @@
       {"url":"http://localhost:3000/api/v1"}
   ],
   "paths": {
-      "/users/new": {
+      "/users/": {
+          "get": {
+              "summary": "get all users",
+              "tags": ["Users"],
+              "description": "Get all users",
+              "responses": {
+                  "200": {
+                      "description": "Ok",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/Users"
+                              }
+                          }
+                      }
+                  },
+                  "400": {
+                      "$ref": "#/components/responses/BadRequest"
+                  }
+              }
+          },
           "post": {
               "summary": "create new user",
               "tags": ["Users"],
@@ -155,7 +175,7 @@
           }
       },
 
-      "/comments/new": {
+      "/comments/": {
           "post": {
               "summary": "add new comment",
               "tags": ["Comments"],
