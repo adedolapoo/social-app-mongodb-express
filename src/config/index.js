@@ -1,12 +1,14 @@
-export const config  = {
+const config  = {
   app: {
-    port: process.env.PORT as string,
+    port: process.env.PORT,
   },
   db: {
-    url: process.env.MONGODB_URI as string,
+    url: process.env.MONGODB_URI,
   },
   data: {
     limit: "50mb",
     extended: false,
   },
 };
+
+module.exports = config;

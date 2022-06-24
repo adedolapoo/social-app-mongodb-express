@@ -3,10 +3,11 @@ const Comment = require('../models/comment.model');
 const User = require('../models/user.model');
 const commentData = require('../utils/comments.json');
 const userData = require('../utils/users.json');
+const config = require('../config');
 
 (async () => {
     try {
-        await mongoose.connect("mongodb+srv://admin:cCEVAE0yjMiCwnnr@cluster0.pbfvs.mongodb.net/fcc-mongodb-and-mongoose?retryWrites=true&w=majority", {
+        await mongoose.connect(config.db.url, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             autoIndex: true,
@@ -15,18 +16,22 @@ const userData = require('../utils/users.json');
             socketTimeoutMS: 45000,
             family: 4
         });
+
         console.log("database connected...");
 
-        // seed data
-        await Comment.deleteMany();
-        await User.deleteMany();
+        console.log(process.env.NODE_ENV);
 
-        // removing all previous data (if any) (Never use this in production)
-        /**
-         * @todo run the insertMany only in development state
-         */
-        await Comment.insertMany(commentData);
-        await User.insertMany(userData);
+        // seed data
+        if(process.env.NODE_ENV !== 'production'){
+            await Comment.deleteMany();
+            await User.deleteMany();
+
+            await Comment.insertMany(commentData);
+            await User.insertMany(userData);
+
+            console.log("database seeded...");
+        }
+
     } catch (error) {
         console.log(error);
     }

@@ -1,8 +1,6 @@
 const AppServer = require('../app');
+const config = require('./config');
 
 const appServer = new AppServer();
 
-/**
- * Fetch Port from env later
- */
-appServer.start(3000)
+appServer.start(config.app.port)
